@@ -49,10 +49,10 @@ let itemsListCount = 0;
 function buildSlotItem(imgURL) {
   return $(
     '<li class="item" style="background-color: ' +
-      listaCores[randomItemIndex(listaCores.length - 1)] +
-      '"><div style="padding-top: 245px; font-size: 100px">' +
-      imgURL +
-      "</div></li>"
+    listaCores[randomItemIndex(listaCores.length - 1)] +
+    '"><div style="padding-top: 245px; font-size: 100px">' +
+    imgURL +
+    "</div></li>"
   );
 }
 
@@ -112,6 +112,7 @@ function rodaRoda() {
 }
 
 function spinStart() {
+  togglePride();
   document.getElementById("btnRodaRoda").innerText = "Rodando, rodando...";
   //document.getElementById("btnRodaRoda").classList.add("rainbow");
   //document.getElementById("btnRodaRoda").classList.add("rainbow-bg");
@@ -119,6 +120,7 @@ function spinStart() {
 
 function spinEnd(cooldownTime = 0) {
   party.screen();
+  togglePride();
   setTimeout(() => {
     document.getElementById("btnRodaRoda").innerText = "Sortear";
   }, cooldownTime);
@@ -280,4 +282,9 @@ function spin10() {
     "easeOutQuad",
     () => spinEnd()
   );
+}
+
+function togglePride() {
+  document.getElementById('pride').classList.toggle("pride");
+  document.getElementById('btnRodaRoda').classList.toggle("pride");
 }
