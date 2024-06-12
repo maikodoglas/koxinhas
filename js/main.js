@@ -60,9 +60,10 @@ var spinParametersList = [
 
 let itemsListCount = 0;
 let lastSpinNumber = 0;
+let itemsArray = [];
 
 function buildSlotWheels($container) {
-    let itemsArray = [];
+
     itemsArray.push(title);
     const amount = 2800;
 
@@ -98,7 +99,7 @@ function rodaRoda() {
 
     var randomSpinNumber = randomItemIndex(9);
 
-    while(lastSpinNumber === randomSpinNumber)
+    while (lastSpinNumber === randomSpinNumber)
         randomSpinNumber = randomItemIndex(9);
 
     var spinParameters = spinParametersList[randomSpinNumber];
@@ -116,7 +117,20 @@ function spinStart() {
 function spin(spinDuration, easing, cooldown, songName) {
     playSong(songName);
 
-    var leftWheelIndex = randomItemIndex(itemsListCount - 1);
+    var winningNumber = randomItemIndex(participants.length);
+
+    if (winningNumber > participants.length)
+        winningNumber = participants.length;
+
+    var winningPlayer = participants[winningNumber];
+    var sortedPlayer = "";
+
+    while (sortedPlayer !== winningPlayer) {
+        leftWheelIndex = randomItemIndex(itemsListCount - 1);
+        sortedPlayer = itemsArray[leftWheelIndex];
+    }
+
+    console.log(winningPlayer, leftWheelIndex);
 
     $leftWheel.animate(
         {
