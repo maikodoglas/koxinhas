@@ -11,41 +11,6 @@ const participants = [
     "marks"
 ];
 
-var colorList = [
-    "#FEFFBF",
-    "#D1FFBA",
-    "#B8CBFF",
-    "#FFBDEB",
-    "#FFC08B",
-    "#FFFBA2",
-    "#D2FFBC",
-    "#C2F1FF",
-    "#DF8B76",
-    "#DDA576",
-    "#D496FF",
-    "#DFC575",
-    "#DFDA75",
-    "#CEDF74",
-    "#9CC2CB",
-    "#1ABB9C",
-    "#3498DB",
-    "#F7996E",
-    "#AE9CD6",
-    "#FFAEAE",
-    "#8BB9D4",
-    "#A6CFA1",
-    "#DAD6A1",
-    "#E1B298",
-    "#E59CA0",
-    "#D3FFCE",
-    "#7FFFD4",
-    "#F08080",
-    "#FFF68F",
-    "#66CDAA",
-    "#BADA55",
-    "#C0D6E4",
-];
-
 var songPiao = new Audio();
 var songPiaoRemix = new Audio();
 var songPiaoExtended = new Audio();
@@ -72,6 +37,7 @@ var spinParametersList = [
 
 let itemsListCount = 0;
 let lastSpinNumber = 0;
+let lastColor = '#FEFFBF';
 let itemsArray = [];
 
 function preloadSongs(){
@@ -135,20 +101,26 @@ function buildSlotWheels($container) {
 function buildSlotItem(imgURL) {
     return $(
         '<li class="item" style="background-color: ' +
-        colorList[randomItemIndex(colorList.length)] +
+        randomColor() +
         '"><div style="padding-top: 245px; font-size: 100px">' +
         imgURL +
         "</div></li>"
     );
 }
 
+function randomColor(){
+	return "hsl(" + 360 * Math.random() + ',' +
+             (25 + 70 * Math.random()) + '%,' + 
+             (45 + 60 * Math.random()) + '%)'
+}
+
 function rodaRoda() {
     spinStart();
 
-    var randomSpinNumber = randomItemIndex(10);
+    var randomSpinNumber = randomItemIndex(spinParametersList.length);
 
     while (lastSpinNumber === randomSpinNumber)
-        randomSpinNumber = randomItemIndex(10);
+        randomSpinNumber = randomItemIndex(spinParametersList.length);
 
     var spinParameters = spinParametersList[randomSpinNumber];
 
@@ -164,18 +136,11 @@ function spinStart() {
 
 function spin(spinDuration, easing, cooldown, song) {
 	song.play();
+	
+	leftWheelIndex = randomItemIndex(itemsListCount);
+	var sortedPlayer = itemsArray[leftWheelIndex];
 
-    var winningNumber = randomItemIndex(participants.length);
-
-    var winningPlayer = participants[winningNumber];
-    var sortedPlayer = "";
-
-    while (sortedPlayer !== winningPlayer) {
-        leftWheelIndex = randomItemIndex(itemsListCount);
-        sortedPlayer = itemsArray[leftWheelIndex];
-    }
-
-    console.log(winningPlayer, leftWheelIndex);
+    console.log(sortedPlayer, leftWheelIndex);
 
     $leftWheel.animate(
         {
@@ -217,7 +182,6 @@ function randomItemIndex(max) {
         var randomBuffer = new Uint32Array(1);
         window.crypto.getRandomValues(randomBuffer);
         let num = randomBuffer[0] % max;
-		console.log(randomBuffer[0] + ' (random buffer) % ' + max + ' (max). Result: ' + num);
 		return num;
     } else {
         alert('navegador not koxinhas compatible');
