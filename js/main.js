@@ -1,5 +1,6 @@
 $(function () {
     $leftWheel = $(".slot-wheel-left");
+	preloadSongs();
     buildSlotWheels($leftWheel);
 });
 
@@ -45,22 +46,75 @@ var colorList = [
     "#C0D6E4",
 ];
 
+var songPiao = new Audio();
+var songPiaoRemix = new Audio();
+var songPiaoExtended = new Audio();
+var songPiaoDenovo = new Audio();
+var songPiaoStrikesBack = new Audio();
+var songPiaoGalvao = new Audio();
+var songPiaoUltimo = new Audio();
+var songPiaoHero = new Audio();
+var songSilvioTriggered = new Audio();
+var songPiaoStorm = new Audio();
+
 var spinParametersList = [
-    [43000, "easeInOutQuart", 12000, "piao.mp3"],
-    [42000, "easeOutQuad", 0, "piao.remix.mp3"],
-    [153000, "easeOutBack", 0, "piao-extended.mp3"],
-    [42000, "easeInOutQuart", 0, "piao-denovo.mp3"],
-    [49000, "easeInOutQuart", 0, "piao-strikes-back.mp3"],
-    [36800, "easeInBounce", 0, "piao-galvao.mp3"],
-    [38700, "easeOutBack", 0, "piao-ultimo.mp3"],
-    [48000, "easeInOutQuart", 0, "piao-hero.mp3"],
-    [11000, "easeInOutQuart", 8000, "silvio-triggered.mp3"],
-    [10000, "easeOutQuad", 0, "piao-storm.mp3"]
+    [43000, "easeInOutQuart", 12000, songPiao],
+    [42000, "easeOutQuad", 0, songPiaoRemix],
+    [153000, "easeOutBack", 0, songPiaoExtended],
+    [42000, "easeInOutQuart", 0, songPiaoDenovo],
+    [49000, "easeInOutQuart", 0, songPiaoStrikesBack],
+    [36800, "easeInBounce", 0, songPiaoGalvao],
+    [38700, "easeOutBack", 0, songPiaoUltimo],
+    [48000, "easeInOutQuart", 0, songPiaoHero],
+    [11000, "easeInOutQuart", 8000, songSilvioTriggered],
+    [10000, "easeOutQuad", 0, songPiaoStorm]
 ]
 
 let itemsListCount = 0;
 let lastSpinNumber = 0;
 let itemsArray = [];
+
+function preloadSongs(){
+    songPiao.src = "piao.mp3";
+    songPiao.preload = "auto";
+    songPiao.load();
+	
+	songPiaoRemix.src = "piao.remix.mp3";
+    songPiaoRemix.preload = "auto";
+    songPiaoRemix.load();
+	
+	songPiaoExtended.src = "piao-extended.mp3";
+    songPiaoExtended.preload = "auto";
+    songPiaoExtended.load();
+	
+	songPiaoDenovo.src = "piao-denovo.mp3";
+    songPiaoDenovo.preload = "auto";
+    songPiaoDenovo.load();
+	
+	songPiaoStrikesBack.src = "piao-strikes-back.mp3";
+    songPiaoStrikesBack.preload = "auto";
+    songPiaoStrikesBack.load();
+	
+	songPiaoGalvao.src = "piao-galvao.mp3";
+    songPiaoGalvao.preload = "auto";
+    songPiaoGalvao.load();
+	
+	songPiaoUltimo.src = "piao-ultimo.mp3";
+    songPiaoUltimo.preload = "auto";
+    songPiaoUltimo.load();
+	
+	songPiaoHero.src = "piao-hero.mp3";
+    songPiaoHero.preload = "auto";
+    songPiaoHero.load();
+	
+	songSilvioTriggered.src = "silvio-triggered.mp3";
+    songSilvioTriggered.preload = "auto";
+    songSilvioTriggered.load();
+	
+	songPiaoStorm.src = "piao-storm.mp3";
+    songPiaoStorm.preload = "auto";
+    songPiaoStorm.load();
+}
 
 function buildSlotWheels($container) {
 
@@ -81,26 +135,20 @@ function buildSlotWheels($container) {
 function buildSlotItem(imgURL) {
     return $(
         '<li class="item" style="background-color: ' +
-        colorList[randomItemIndex(colorList.length - 1)] +
+        colorList[randomItemIndex(colorList.length)] +
         '"><div style="padding-top: 245px; font-size: 100px">' +
         imgURL +
         "</div></li>"
     );
 }
 
-function playSong(songName) {
-    song = new Audio(songName);
-
-    song.play();
-}
-
 function rodaRoda() {
     spinStart();
 
-    var randomSpinNumber = randomItemIndex(9);
+    var randomSpinNumber = randomItemIndex(10);
 
     while (lastSpinNumber === randomSpinNumber)
-        randomSpinNumber = randomItemIndex(9);
+        randomSpinNumber = randomItemIndex(10);
 
     var spinParameters = spinParametersList[randomSpinNumber];
 
@@ -114,19 +162,16 @@ function spinStart() {
     document.getElementById("btnRodaRoda").innerText = "Rodando, rodando...";
 }
 
-function spin(spinDuration, easing, cooldown, songName) {
-    playSong(songName);
+function spin(spinDuration, easing, cooldown, song) {
+	song.play();
 
     var winningNumber = randomItemIndex(participants.length);
-
-    if (winningNumber > participants.length)
-        winningNumber = participants.length;
 
     var winningPlayer = participants[winningNumber];
     var sortedPlayer = "";
 
     while (sortedPlayer !== winningPlayer) {
-        leftWheelIndex = randomItemIndex(itemsListCount - 1);
+        leftWheelIndex = randomItemIndex(itemsListCount);
         sortedPlayer = itemsArray[leftWheelIndex];
     }
 
@@ -140,6 +185,18 @@ function spin(spinDuration, easing, cooldown, songName) {
         easing,
         () => spinEnd(cooldown)
     );
+	
+	if (randomItemIndex(4) == 3){
+		console.log('easter egg madness');
+		var waitTime = Math.floor(spinDuration * 70 / 100);
+		
+		setTimeout(function () {
+			document.getElementById("imgKoxinhas").style.display = "block";
+		}, waitTime);
+		setTimeout(function () {
+			document.getElementById("imgKoxinhas").style.display = "none";
+		}, waitTime + 300);
+	}
 }
 
 function spinEnd(cooldownTime = 0) {
@@ -156,5 +213,14 @@ function togglePride() {
 }
 
 function randomItemIndex(max) {
-    return Math.floor(Math.random() * Math.floor(max));
+    if (window.crypto && window.crypto.getRandomValues) {
+        var randomBuffer = new Uint32Array(1);
+        window.crypto.getRandomValues(randomBuffer);
+        let num = randomBuffer[0] % max;
+		console.log(randomBuffer[0] + ' (random buffer) % ' + max + ' (max). Result: ' + num);
+		return num;
+    } else {
+        alert('navegador not koxinhas compatible');
+		return 0;
+    }
 }
